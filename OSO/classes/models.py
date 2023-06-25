@@ -29,29 +29,44 @@ class StudyGroup(models.Model):
 
     type = models.CharField(max_length=50, verbose_name='Тип группы',choices=StudyGroupType.choices, default=StudyGroupType.OUTSIDER)
 
+    class StudyGroupCourseType(models.TextChoices):
+        SPEC = 'С', 'Специалитет'
+        BACH = 'Б', 'Бакалавриат'
+        MAG = 'М', 'Магистратура'
+        ASP = 'А', 'Аспирантура'
+
+        OTHER = '', 'Другое'
+
+    course = models.CharField(max_length=50, verbose_name='Программа обучения',choices=StudyGroupCourseType.choices, default=StudyGroupCourseType.OTHER)
+
+    class StudyGroupInstituteType(models.TextChoices):
+        YaFIT = 'оЯФиТ', 'отделение ядерной физики и технологий'
+        OBT = 'ОБТ', 'отделение биотехнологий'
+        SEN = 'СЭН', 'социально-экономическое направление'
+        IKS = 'ИИКС', 'институт интеллектуальных и кибернетических систем'
+
+        OTHER = '', 'Другое'
+
+    course = models.CharField(max_length=50, verbose_name='Программа обучения', choices=StudyGroupInstituteType.choices,
+                              default=StudyGroupInstituteType.OTHER)
+
     year = models.SmallIntegerField(verbose_name='Год поступления', default=datetime.today().year)
     numgroup = models.SmallIntegerField(default=0, verbose_name='Номер группы', help_text='оставьте 0, если такая группа на потоке единственная')
-    subgroup = models.SmallIntegerField(default=0, verbose_name='Подгруппа')
+    timetable_id = models.IntegerField(default=111, verbose_name='id группы в расписании')
     is_foreigns = models.BooleanField(default=False, verbose_name='Иностранцы')
 
+
     def __str__(self):
-        study_type = {
-            'bachelors': ['БИЗ', 'БИО', 'ИВТ', 'ИС', 'М', 'МЕН', 'МТМ', 'МФ', 'ТД', 'ТФ', 'ХИМ', 'ХФМ', 'ЭКН', 'ЯФТ',
-                          'ЯЭТ'],
-            'specialists': ['АЭС', 'ЛД', 'ЭиА', 'ЯРМ'],
-        }
+
         ans = self.type
-        app_type = ''
+
         app_sub=''
         app_num=''
-        if ans in study_type['bachelors']:
-            app_type = f'-Б{self.year % 1000}'
-        elif ans in study_type['specialists']:
-            app_type = f'-С{self.year % 1000}'
+        app_type = f'-{self.course}{self.year % 1000}'
+
         if self.numgroup:
             app_num = self.numgroup
-        if self.subgroup:
-            app_sub = f' (подгруппа {self.subgroup})'
+
         ans = ans + f"{app_num}{app_type}{app_sub}"
         if self.is_foreigns:
             ans = ans+'и'
