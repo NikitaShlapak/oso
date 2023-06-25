@@ -21,7 +21,7 @@ class StudyGroupAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Основное', {"fields": ("get_str", 'get_study_year')}),
-        ("Данные о группе", {"fields": ("type", "numgroup", "year", 'subgroup', 'is_foreigns')}),
+        ("Данные о группе", {"fields": ("type",'course', "numgroup", "year",'institute','is_foreigns', 'timetable_id')}),
     )
 
 admin.site.register(StudyGroup, StudyGroupAdmin)

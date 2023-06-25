@@ -47,7 +47,7 @@ class StudyGroup(models.Model):
 
         OTHER = '', 'Другое'
 
-    course = models.CharField(max_length=50, verbose_name='Программа обучения', choices=StudyGroupInstituteType.choices,
+    institute = models.CharField(max_length=50, verbose_name='Программа обучения', choices=StudyGroupInstituteType.choices,
                               default=StudyGroupInstituteType.OTHER)
 
     year = models.SmallIntegerField(verbose_name='Год поступления', default=datetime.today().year)
